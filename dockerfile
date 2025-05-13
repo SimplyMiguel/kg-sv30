@@ -10,7 +10,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FLASK_ENV=production \
     DEBUG=false
 
-    
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt

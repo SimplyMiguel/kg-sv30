@@ -1,0 +1,30 @@
+# Base image: Python 3.11 slim
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_ENV=development \
+    DEBUG=true
+
+# Install dependencies and curl for health check
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create necessary directories
+RUN mkdir -p data
+
+# Copy application code
+COPY src/ ./src/
+COPY templates/ ./templates/
+COPY static/ ./static/
+COPY wsgi.py gunicorn_config.py ./
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["python", "-m", "flask", "--app", "src.app:app", "run", "--host=0.0.0.0", "--port=8080"]
